@@ -1,10 +1,10 @@
-from fastapi import FastAPI
-from endpoint import route
+from fastapi_pagination import add_pagination
 import uvicorn
 
-app = FastAPI()
+from endpoint import app
 
-app.include_router(route)
+
+add_pagination(app)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

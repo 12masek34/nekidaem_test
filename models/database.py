@@ -1,8 +1,10 @@
 import os
 import datetime
+from typing import Iterator
+
 from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, Text, MetaData
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Session, backref
+from sqlalchemy.orm import relationship, Session, backref, sessionmaker
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,7 +12,15 @@ load_dotenv()
 Base = declarative_base()
 engine = create_engine(os.getenv('DNS'))
 meta = MetaData(bind=engine)
-session = Session(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
+
+def get_db() -> Iterator[Session]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class User(Base):
@@ -36,7 +46,7 @@ class Blog(Base):
     user_id = Column(Integer, ForeignKey('user_.id'), unique=True)
 
     user = relationship('User', backref=backref('blog', uselist=False))
-    post = relationship('Post', cascade='all, delete-orphan')
+    post = relationship('Post', cascade='all, delete-orphan', order_by='Post.created_at')
 
 
 class Post(Base):
