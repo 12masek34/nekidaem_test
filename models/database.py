@@ -18,7 +18,16 @@ class User(Base):
     id = Column(Integer(), primary_key=True)
     username = Column(String(128), nullable=False)
 
-    subscribers = relationship('Blog')
+    subscribers = relationship('Subscribe')
+
+
+class Subscribe(Base):
+    __tablename__ = 'subscribe'
+    id = Column(Integer(), primary_key=True)
+    user_id = Column(Integer, ForeignKey('user_.id'))
+    blog_id = Column(Integer, ForeignKey('blog.id'))
+
+    blog = relationship('Blog')
 
 
 class Blog(Base):
@@ -27,7 +36,7 @@ class Blog(Base):
     user_id = Column(Integer, ForeignKey('user_.id'), unique=True)
 
     user = relationship('User', backref=backref('blog', uselist=False))
-    post = relationship('Post', backref='blog', cascade='all, delete-orphan')
+    post = relationship('Post', cascade='all, delete-orphan')
 
 
 class Post(Base):
@@ -38,8 +47,29 @@ class Post(Base):
     text = Column(String(140))
     created_at = Column(DateTime(), default=datetime.datetime.now)
 
-
+    blog = relationship('Blog')
 
 
 # Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
+#
+
+# a = User(username='BBB')
+#
+# b = Blog(user=a)
+#
+# p1 = Post(title='Some title',
+#          text='Some text',
+#          blog=b)
+#
+# p2 = Post(title='Some title',
+#          text='Some text',
+#          blog=b)
+#
+# p3 = Post(title='Some title',
+#          text='Some text',
+#          blog=b)
+
+#
+# session.add(a)
+# session.commit()
