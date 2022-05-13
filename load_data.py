@@ -10,14 +10,12 @@ db = next(get_db())
 
 
 for _ in range(1_000):
-    print(_)
     user = User(username=fake.name())
     blog = Blog(user=user)
     db.add(user)
     db.commit()
 
 for _ in range(1_000):
-    print(_)
     post = Post(blog_id=random.randint(1, 1_000),
                 title=fake.word(),
                 text=fake.text(max_nb_chars=140))
@@ -26,7 +24,6 @@ for _ in range(1_000):
     db.commit()
 
 for _ in range(1_000):
-    print(_)
     user = db.query(User).get(random.randint(1, 1_000))
     for _ in range(1, 10):
         subscribe = Subscribe(user_id=random.randint(1, 1_000), blog_id=random.randint(1, 1_000))

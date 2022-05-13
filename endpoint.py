@@ -15,6 +15,7 @@ app = FastAPI()
 
 @app.post('/user/add', status_code=201, response_model=UserResponseSchema, tags=['user'])
 async def user_add(data: UserSchema, db: Session = Depends(get_db)) -> UserSchema:
+
     user = User(username=data.username)
     blog = Blog(user=user)
     db.add(user)
@@ -25,6 +26,7 @@ async def user_add(data: UserSchema, db: Session = Depends(get_db)) -> UserSchem
 
 @app.post('/subscribe', status_code=201, response_model=SubscribeResponseSchema, tags=['subscribe'])
 async def user_subscribe(data: SubscribeSchema, db: Session = Depends(get_db)) -> SubscribeResponseSchema:
+
     try:
         user = db.query(User).filter(User.id == data.user_id).one()
     except NoResultFound:
@@ -49,6 +51,7 @@ async def user_subscribe(data: SubscribeSchema, db: Session = Depends(get_db)) -
 
 @app.delete('/unsubscribe', status_code=200, response_model=list[SubscribeResponseSchema], tags=['subscribe'])
 async def user_subscribe(data: SubscribeSchema, db: Session = Depends(get_db)) -> SubscribeResponseSchema:
+
     subscribes = db.query(Subscribe).filter(Subscribe.user_id == data.user_id,
                                             Subscribe.blog_id == data.blog_id).all()
     if len(subscribes) == 0:
@@ -65,6 +68,7 @@ async def user_subscribe(data: SubscribeSchema, db: Session = Depends(get_db)) -
 
 @app.get('/tape/{user_id}', status_code=200, response_model=Page[PostSchema], tags=['tape'])
 async def tape(user_id: int, post_id: int | None = None, db: Session = Depends(get_db)) -> AbstractPage[PostSchema]:
+
     try:
         user = db.query(User).filter(User.id == user_id).one()
 
@@ -90,6 +94,7 @@ async def tape(user_id: int, post_id: int | None = None, db: Session = Depends(g
 
 @app.get('/tape/limit_5/{user_id}', status_code=200, response_model=Page[PostSchema], tags=['tape'])
 async def tape(user_id: int, post_id: int | None = None, db: Session = Depends(get_db)) -> AbstractPage[PostSchema]:
+
     try:
         user = db.query(User).filter(User.id == user_id).one()
 
@@ -115,7 +120,9 @@ async def tape(user_id: int, post_id: int | None = None, db: Session = Depends(g
 
 @app.get('/user/all', status_code=200, response_model=list[UserResponseSchema], tags=['subscribe'])
 async def subscribe_all(db: Session = Depends(get_db)):
+
     users = db.query(User).order_by(User.id).all()
+
     return users
 
 

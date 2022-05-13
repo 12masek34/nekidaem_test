@@ -2,15 +2,18 @@ import requests
 import schedule
 import time
 
+ALL_USER = 'http://127.0.0.1:8000/user/all'
+TAPES_USER = 'http://127.0.0.1:8000/tape/limit_5/'
+
 
 def mailer():
-    ALL_USER = 'http://127.0.0.1:8000/user/all'
-    TAPES_USER = 'http://127.0.0.1:8000/tape/limit_5/'
+    """Берет всех юзеров по апи, потом для каждого юзера, берет 5 последних постов из его ленты.
+    Если тут будет много юзеров, лучше добавить пагинацию."""
 
-    subscribes = requests.get(ALL_USER).json()
-    for subscribe in subscribes:
-        username = subscribe['username']
-        user_id = str(subscribe['id'])
+    users = requests.get(ALL_USER).json()
+    for user in users:
+        username = user['username']
+        user_id = str(user['id'])
         tapes = requests.get(TAPES_USER + user_id).json()
         if len(tapes["items"]) == 0:
             continue

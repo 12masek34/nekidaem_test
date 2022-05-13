@@ -2,7 +2,7 @@ import os
 import datetime
 from typing import Iterator
 
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, Text, MetaData
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session, backref, sessionmaker
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 Base = declarative_base()
-engine = create_engine(os.getenv('DNS'))
+engine = create_engine(os.getenv('POSTGRES_DNS'))
 meta = MetaData(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
