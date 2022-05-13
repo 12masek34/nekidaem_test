@@ -60,5 +60,7 @@ class Post(Base):
     blog = relationship('Blog')
 
 
+def create_db():
+    Base.metadata.create_all(engine)
+
 # Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
