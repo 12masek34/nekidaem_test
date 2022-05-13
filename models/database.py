@@ -62,24 +62,3 @@ class Post(Base):
 
 # Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
-#
-
-# a = User(username='BBB')
-#
-# b = Blog(user=a)
-#
-# p1 = Post(title='Some title',
-#          text='Some text',
-#          blog=b)
-#
-# p2 = Post(title='Some title',
-#          text='Some text',
-#          blog=b)
-#
-# p3 = Post(title='Some title',
-#          text='Some text',
-#          blog=b)
-
-#
-# session.add(a)
-# session.commit()
