@@ -21,7 +21,7 @@ def mailer():
         print(f'Рассылка постов для - {user_id}-{username}: \n {tapes["items"][0]}')
 
 
-schedule.every().day.at("11:13").do(mailer)
+schedule.every().day.at("10:00").do(mailer)
 
 while True:
     schedule.run_pending()
