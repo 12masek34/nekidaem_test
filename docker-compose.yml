@@ -1,0 +1,66 @@
+version: "3.9"
+
+volumes:
+    app_data:
+    redis_data:
+    postgres_data:
+
+
+
+services:
+    postgres:
+        image: postgres:13.3-alpine
+        container_name: postgres
+        network_mode: bridge
+        restart: always
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+            - ${DB_PORT}:5432
+    redis:
+        image: redis:alpine
+        container_name: redis
+        network_mode: bridge
+        restart: always
+        volumes:
+          - redis_data:/data
+        ports:
+          - 6379:6379
+    web:
+        build: .
+        container_name: web
+        restart: always
+        command: python main.py
+        volumes:
+          - app_data:/app
+        ports:
+          - 8000:8000
+        extra_hosts:
+          - host.docker.internal:host-gateway
+        depends_on:
+          - postgres
+          - redis
+        links:
+          - postgres:postgres
+        network_mode: bridge
+    mailing:
+        build: .
+        container_name: mailing
+        restart: always
+        command: python mailing.py
+        volumes:
+          - app_data:/app
+        ports:
+          - 9000:9000
+        extra_hosts:
+          - host.docker.internal:host-gateway
+        depends_on:
+          - postgres
+          - redis
+        links:
+          - postgres:postgres
+        network_mode: bridge
+

@@ -9,8 +9,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
+POSTGRES_PORT = os.getenv('DB_PORT')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST')
+
 Base = declarative_base()
-engine = create_engine(os.getenv('POSTGRES_DNS'))
+engine = create_engine(f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}')
 meta = MetaData(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
